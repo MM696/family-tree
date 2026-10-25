@@ -1,0 +1,234 @@
+.leaf-tree {
+  --tree-size: min(90vh, 94vw);
+  --unit: calc(var(--tree-size) / 100);
+  position: relative;
+  width: var(--tree-size);
+  height: var(--tree-size);
+}
+
+.leaf-tree__tree {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.55);
+  transform-origin: 50% 85%;
+}
+
+.leaf-tree.is-intro .leaf-tree__tree,
+.leaf-tree.is-ready .leaf-tree__tree {
+  animation: tree-pop var(--tree-pop) cubic-bezier(0.22, 1.4, 0.36, 1) both;
+}
+
+.leaf-slot {
+  --size: 6;
+  --zoom: 8;
+  position: absolute;
+  left: calc(var(--x) * var(--unit));
+  top: calc(var(--y) * var(--unit));
+  width: calc(var(--size) * var(--unit));
+  margin-left: calc(var(--size) * var(--unit) / -2);
+  margin-top: calc(var(--size) * var(--unit) / -2);
+}
+
+.leaf {
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: rotate(var(--rest)) scale(0);
+  transform-origin: 22% 92%;
+}
+
+.leaf-tree.is-intro .leaf {
+  animation: leaf-grow var(--grow-duration) cubic-bezier(0.22, 1.35, 0.36, 1) var(--grow-delay)
+    both;
+}
+
+.leaf-tree.is-ready .leaf {
+  opacity: 1;
+  transform: rotate(var(--rest)) scale(1);
+}
+
+.leaf-slot.is-flying .leaf {
+  z-index: 10;
+  animation: leaf-fly var(--flight) ease-in-out both;
+}
+
+.leaf__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  /* The stem of leaf.png, so the leaf sways from where it hangs. */
+  transform-origin: 22% 92%;
+  filter: drop-shadow(0 calc(0.3 * var(--unit)) calc(0.3 * var(--unit)) rgba(0, 0, 0, 0.3));
+}
+
+.leaf-tree.is-ready .leaf__img {
+  animation: leaf-sway 2.6s ease-in-out var(--sway-delay) infinite alternate;
+}
+
+/*
+ * Kept outside the scaled .leaf so the text is drawn at its real size
+ * instead of being stretched (and blurred) by the zoom.
+ * Positioned over the middle of the leaf body once flown out and zoomed.
+ */
+.leaf__name {
+  --tilt: calc(var(--spin) * -0.4);
+  position: absolute;
+  z-index: 20;
+  top: calc(50% - 4% * var(--zoom) + var(--dy) * var(--unit));
+  left: calc(50% + 2% * var(--zoom) + var(--dx) * var(--unit));
+  width: max-content;
+  max-width: calc(var(--size) * var(--zoom) * 0.72 * var(--unit));
+  padding: calc(1.3 * var(--unit)) calc(2.6 * var(--unit));
+  border: calc(0.55 * var(--unit)) solid #fff;
+  border-radius: calc(2 * var(--unit));
+  background: #fffdf6;
+  box-shadow:
+    0 0 0 calc(0.2 * var(--unit)) rgba(0, 0, 0, 0.08),
+    0 calc(0.7 * var(--unit)) calc(1.4 * var(--unit)) rgba(0, 0, 0, 0.25);
+  color: #1f4d14;
+  font-size: calc(6.2 * var(--unit));
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(var(--tilt));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.leaf-slot.is-flying .leaf__name {
+  animation: leaf-name var(--flight) ease-in-out both;
+}
+
+@keyframes tree-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.55);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes leaf-grow {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--rest)) scale(0);
+  }
+  70% {
+    opacity: 1;
+    transform: rotate(var(--rest)) scale(1.18);
+  }
+  100% {
+    opacity: 1;
+    transform: rotate(var(--rest)) scale(1);
+  }
+}
+
+/*
+ * One flight: 0-39 fly off the tree toward the viewer and zoom in,
+ * 39-71 hover while the name is shown, 71-100 fly back to the resting spot.
+ */
+@keyframes leaf-fly {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(var(--rest));
+  }
+  11% {
+    transform: translate(calc(var(--dx) * 0.1 * var(--unit)), calc((var(--dy) * 0.1 - 4) * var(--unit)))
+      scale(1.3) rotate(calc(var(--rest) * 0.5 + var(--spin)));
+  }
+  39% {
+    transform: translate(calc(var(--dx) * var(--unit)), calc(var(--dy) * var(--unit)))
+      scale(var(--zoom)) rotate(0deg);
+  }
+  55% {
+    transform: translate(calc(var(--dx) * var(--unit)), calc((var(--dy) - 1) * var(--unit)))
+      scale(calc(var(--zoom) * 1.05)) rotate(0deg);
+  }
+  71% {
+    transform: translate(calc(var(--dx) * var(--unit)), calc(var(--dy) * var(--unit)))
+      scale(var(--zoom)) rotate(0deg);
+  }
+  100% {
+    transform: translate(0, 0) scale(1) rotate(var(--rest));
+  }
+}
+
+/* Follows the same hover bob as leaf-fly so the sticker stays stuck to the leaf. */
+@keyframes leaf-name {
+  0%,
+  35% {
+    opacity: 0;
+  }
+  39% {
+    transform: translate(-50%, -50%) rotate(var(--tilt));
+  }
+  43% {
+    opacity: 1;
+  }
+  55% {
+    transform: translate(-50%, calc(-50% - var(--unit))) rotate(var(--tilt));
+  }
+  69% {
+    opacity: 1;
+  }
+  71% {
+    transform: translate(-50%, -50%) rotate(var(--tilt));
+  }
+  75%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes leaf-sway {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .leaf-tree__tree,
+  .leaf-tree.is-intro .leaf-tree__tree,
+  .leaf-tree.is-ready .leaf-tree__tree {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .leaf,
+  .leaf-tree.is-intro .leaf,
+  .leaf-tree.is-ready .leaf {
+    opacity: 1;
+    transform: rotate(var(--rest));
+    animation: none;
+  }
+
+  .leaf-slot.is-flying .leaf,
+  .leaf-slot.is-flying .leaf__name,
+  .leaf-tree.is-ready .leaf__img {
+    animation: none;
+  }
+
+  .leaf__name {
+    top: 50%;
+    left: 50%;
+    max-width: none;
+    padding: calc(0.15 * var(--unit)) calc(0.4 * var(--unit));
+    border-width: calc(0.1 * var(--unit));
+    font-size: calc(0.9 * var(--unit));
+    opacity: 1;
+  }
+}

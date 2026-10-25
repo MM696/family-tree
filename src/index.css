@@ -1,0 +1,18 @@
+:root {
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: #2b2b2b;
+  background: linear-gradient(180deg, #bfe6ff 0%, #e8f7ff 60%, #f3fbe9 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  overflow: hidden;
+}
