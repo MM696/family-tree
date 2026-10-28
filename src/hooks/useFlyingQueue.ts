@@ -35,12 +35,13 @@ export function useFlyingQueue(
       active.add(index)
       setFlying(new Set(active))
 
+      // Keep the flying class on until the CSS 100% keyframe has landed.
       const landing = window.setTimeout(() => {
         timers.delete(landing)
         active.delete(index)
         setFlying(new Set(active))
         busy = false
-      }, flightMs)
+      }, flightMs + 80)
       timers.add(landing)
     }
 

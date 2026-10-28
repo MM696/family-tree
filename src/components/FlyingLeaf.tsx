@@ -9,22 +9,35 @@ type Props = {
   growDelayMs: number
 }
 
-/** Shrink the sticker text for long names so it stays inside the card. */
+/** Shrink long names so they stay on the leaf. Words are never split. */
 function nameScale(name: string) {
   const length = name.trim().length
   if (length <= 12) return 1
-  if (length <= 18) return 0.85
-  if (length <= 26) return 0.7
-  if (length <= 36) return 0.58
-  return 0.48
+  if (length <= 20) return 0.9
+  if (length <= 28) return 0.8
+  if (length <= 38) return 0.7
+  return 0.6
+}
+
+/** How far this leaf must move so its centre sits in the middle of the screen. */
+function deltaToScreenCenter(at: { x: number; y: number }) {
+  const treeSize = Math.min(0.9 * window.innerHeight, 0.94 * window.innerWidth)
+  const leafX = (window.innerWidth - treeSize) / 2 + (at.x / 100) * treeSize
+  const leafY = (window.innerHeight - treeSize) / 2 + (at.y / 100) * treeSize
+  return {
+    dx: window.innerWidth / 2 - leafX,
+    dy: window.innerHeight / 2 - leafY,
+  }
 }
 
 export function FlyingLeaf({ leaf, index, flying, growDelayMs }: Props) {
+  const { dx, dy } = deltaToScreenCenter(leaf.at)
+
   const style = {
     '--x': leaf.at.x,
     '--y': leaf.at.y,
-    '--dx': leaf.to.x - leaf.at.x,
-    '--dy': leaf.to.y - leaf.at.y,
+    '--dx': `${dx}px`,
+    '--dy': `${dy}px`,
     '--rest': `${leaf.rest}deg`,
     '--spin': `${leaf.spin}deg`,
     '--sway-delay': `${index * -0.37}s`,
@@ -36,8 +49,8 @@ export function FlyingLeaf({ leaf, index, flying, growDelayMs }: Props) {
     <div className={flying ? 'leaf-slot is-flying' : 'leaf-slot'} style={style}>
       <div className="leaf">
         <img className="leaf__img" src={leafImage} alt="" draggable={false} />
+        <span className="leaf__name">{leaf.name}</span>
       </div>
-      <span className="leaf__name">{leaf.name}</span>
     </div>
   )
 }

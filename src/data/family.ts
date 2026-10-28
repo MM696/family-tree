@@ -1,7 +1,7 @@
 /** One leaf is added to the tree for each name, in this order. */
 export const familyNames = [
   'ERO FAMILY',
-  'KENECHUKWU FAMILY',
+  'KENECHUKWU & FAMILY',
   'ENGR & MRS IGBOABUCHI JUDE & FAMILY',
   'MR STEPHEN JOHN-OTI & FAMILY',
   'LATE MR AUGUSTINE MADUBUKE & FAMILY',

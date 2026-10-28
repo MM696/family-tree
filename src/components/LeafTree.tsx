@@ -27,6 +27,11 @@ const INTRO_PAUSE_MS = 700
 
 const INTRO_END_MS = GROW_START_MS + GROW_WINDOW_MS + GROW_DURATION_MS + INTRO_PAUSE_MS
 
+/** Resting leaf size as % of the tree. */
+const LEAF_SIZE = 6
+/** Zoomed leaf size as a fraction of the smaller screen side. */
+const FLY_SCREEN = 0.78
+
 function waitForImage(src: string) {
   return new Promise<void>((resolve) => {
     const img = new Image()
@@ -37,9 +42,25 @@ function waitForImage(src: string) {
   })
 }
 
+/** Unitless zoom so a resting leaf grows to ~FLY_SCREEN of the screen. */
+function calcZoom() {
+  const flyPx = FLY_SCREEN * Math.min(window.innerWidth, window.innerHeight)
+  const treePx = Math.min(0.9 * window.innerHeight, 0.94 * window.innerWidth)
+  const restPx = (LEAF_SIZE / 100) * treePx
+  return Math.max(1, flyPx / restPx)
+}
+
 export function LeafTree() {
   const [phase, setPhase] = useState<'waiting' | 'intro' | 'ready'>('waiting')
+  const [zoom, setZoom] = useState(12)
   const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, phase === 'ready')
+
+  useEffect(() => {
+    const update = () => setZoom(calcZoom())
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -59,7 +80,6 @@ export function LeafTree() {
       }, INTRO_END_MS)
     }
 
-    // Wait for assets + two frames so the pop is visible after paint.
     Promise.all([waitForImage(tree), waitForImage(leafImage)]).then(() => {
       if (cancelled) return
       requestAnimationFrame(() => {
@@ -77,6 +97,9 @@ export function LeafTree() {
     '--flight': `${FLIGHT_MS}ms`,
     '--tree-pop': `${TREE_POP_MS}ms`,
     '--grow-duration': `${GROW_DURATION_MS}ms`,
+    '--size': LEAF_SIZE,
+    '--fly-size': `${FLY_SCREEN * 100}vmin`,
+    '--zoom': zoom,
   } as CSSProperties
 
   return (
