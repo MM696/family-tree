@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 
 /**
- * Sends items off one at a time, in order, every `staggerMs`.
- * Each item stays in the returned set for `flightMs`, then it is free to fly again.
+ * Sends items off one at a time, in order.
+ * The next leaf only launches after the previous one has finished (`flightMs`)
+ * plus any extra wait built into `staggerMs`.
  * Starts only when `enabled` becomes true.
  */
 export function useFlyingQueue(
@@ -20,32 +21,35 @@ export function useFlyingQueue(
     }
 
     const active = new Set<number>()
-    const landings = new Set<number>()
+    const timers = new Set<number>()
     let next = 0
-    let interval = 0
+    let busy = false
 
     const launch = () => {
+      if (busy) return
+
       const index = next
       next = (next + 1) % count
-      if (active.has(index)) return
-
+      busy = true
+      active.clear()
       active.add(index)
       setFlying(new Set(active))
 
       const landing = window.setTimeout(() => {
-        landings.delete(landing)
+        timers.delete(landing)
         active.delete(index)
         setFlying(new Set(active))
+        busy = false
       }, flightMs)
-      landings.add(landing)
+      timers.add(landing)
     }
 
     launch()
-    interval = window.setInterval(launch, staggerMs)
+    const interval = window.setInterval(launch, staggerMs)
 
     return () => {
       window.clearInterval(interval)
-      landings.forEach((landing) => window.clearTimeout(landing))
+      timers.forEach((timer) => window.clearTimeout(timer))
     }
   }, [count, staggerMs, flightMs, enabled])
 

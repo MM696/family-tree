@@ -6,10 +6,13 @@ import { useFlyingQueue } from '../hooks/useFlyingQueue'
 import { FlyingLeaf } from './FlyingLeaf'
 import './LeafTree.css'
 
-/** Time between one leaf leaving the tree and the next one leaving. */
-const STAGGER_MS = 3000
-/** How long one leaf takes to fly out, show its name and fly back. */
-const FLIGHT_MS = 6000
+/** How long one leaf takes to fly out, show its name and fly back.
+ *  Timeline: ~2s out, 4s large with name, ~2s back. */
+const FLIGHT_MS = 8000
+/** Pause after a leaf lands before the next one leaves (one at a time). */
+const GAP_MS = 800
+/** Time between launches: must be at least FLIGHT_MS so only one leaf flies. */
+const STAGGER_MS = FLIGHT_MS + GAP_MS
 
 /** Tree pop animation length. */
 const TREE_POP_MS = 850

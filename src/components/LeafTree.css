@@ -24,7 +24,9 @@
 
 .leaf-slot {
   --size: 6;
-  --zoom: 8;
+  /* Zoomed leaf is ~70% of the smaller screen side. */
+  --fly-size: 70vmin;
+  --zoom: calc(var(--fly-size) / (var(--size) * var(--unit)));
   position: absolute;
   left: calc(var(--x) * var(--unit));
   top: calc(var(--y) * var(--unit));
@@ -77,24 +79,31 @@
  */
 .leaf__name {
   --tilt: calc(var(--spin) * -0.4);
+  --name-scale: 1;
   position: absolute;
   z-index: 20;
   top: calc(50% - 4% * var(--zoom) + var(--dy) * var(--unit));
   left: calc(50% + 2% * var(--zoom) + var(--dx) * var(--unit));
+  box-sizing: border-box;
   width: max-content;
-  max-width: calc(var(--size) * var(--zoom) * 0.72 * var(--unit));
-  padding: calc(1.3 * var(--unit)) calc(2.6 * var(--unit));
-  border: calc(0.55 * var(--unit)) solid #fff;
-  border-radius: calc(2 * var(--unit));
+  max-width: min(calc(var(--fly-size) * 0.88), 90vw);
+  padding: calc(var(--fly-size) * 0.035 * var(--name-scale))
+    calc(var(--fly-size) * 0.055 * var(--name-scale));
+  border: calc(var(--fly-size) * 0.012) solid #fff;
+  border-radius: calc(var(--fly-size) * 0.04);
   background: #fffdf6;
   box-shadow:
-    0 0 0 calc(0.2 * var(--unit)) rgba(0, 0, 0, 0.08),
-    0 calc(0.7 * var(--unit)) calc(1.4 * var(--unit)) rgba(0, 0, 0, 0.25);
+    0 0 0 calc(var(--fly-size) * 0.005) rgba(0, 0, 0, 0.08),
+    0 calc(var(--fly-size) * 0.02) calc(var(--fly-size) * 0.04) rgba(0, 0, 0, 0.25);
   color: #1f4d14;
-  font-size: calc(6.2 * var(--unit));
+  font-size: max(14px, calc(var(--fly-size) * 0.11 * var(--name-scale)));
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: center;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  hyphens: auto;
   transform: translate(-50%, -50%) rotate(var(--tilt));
   opacity: 0;
   pointer-events: none;
@@ -135,26 +144,26 @@
 }
 
 /*
- * One flight: 0-39 fly off the tree toward the viewer and zoom in,
- * 39-71 hover while the name is shown, 71-100 fly back to the resting spot.
+ * One flight (8s total): 0-25 fly out and zoom in (~2s),
+ * 25-75 hover large with the name (~4s), 75-100 fly back (~2s).
  */
 @keyframes leaf-fly {
   0% {
     transform: translate(0, 0) scale(1) rotate(var(--rest));
   }
-  11% {
+  8% {
     transform: translate(calc(var(--dx) * 0.1 * var(--unit)), calc((var(--dy) * 0.1 - 4) * var(--unit)))
       scale(1.3) rotate(calc(var(--rest) * 0.5 + var(--spin)));
   }
-  39% {
+  25% {
     transform: translate(calc(var(--dx) * var(--unit)), calc(var(--dy) * var(--unit)))
       scale(var(--zoom)) rotate(0deg);
   }
-  55% {
+  50% {
     transform: translate(calc(var(--dx) * var(--unit)), calc((var(--dy) - 1) * var(--unit)))
       scale(calc(var(--zoom) * 1.05)) rotate(0deg);
   }
-  71% {
+  75% {
     transform: translate(calc(var(--dx) * var(--unit)), calc(var(--dy) * var(--unit)))
       scale(var(--zoom)) rotate(0deg);
   }
@@ -166,25 +175,25 @@
 /* Follows the same hover bob as leaf-fly so the sticker stays stuck to the leaf. */
 @keyframes leaf-name {
   0%,
-  35% {
+  22% {
     opacity: 0;
   }
-  39% {
+  25% {
     transform: translate(-50%, -50%) rotate(var(--tilt));
   }
-  43% {
+  28% {
     opacity: 1;
   }
-  55% {
+  50% {
     transform: translate(-50%, calc(-50% - var(--unit))) rotate(var(--tilt));
   }
-  69% {
+  72% {
     opacity: 1;
   }
-  71% {
+  75% {
     transform: translate(-50%, -50%) rotate(var(--tilt));
   }
-  75%,
+  78%,
   100% {
     opacity: 0;
   }
