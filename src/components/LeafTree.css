@@ -1,5 +1,5 @@
 .leaf-tree {
-  --tree-size: min(90vh, 94vw);
+  --tree-size: min(76vh, 94vw);
   --unit: calc(var(--tree-size) / 100);
   position: relative;
   width: var(--tree-size);

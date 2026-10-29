@@ -21,7 +21,7 @@ function nameScale(name: string) {
 
 /** How far this leaf must move so its centre sits in the middle of the screen. */
 function deltaToScreenCenter(at: { x: number; y: number }) {
-  const treeSize = Math.min(0.9 * window.innerHeight, 0.94 * window.innerWidth)
+  const treeSize = Math.min(0.76 * window.innerHeight, 0.94 * window.innerWidth)
   const leafX = (window.innerWidth - treeSize) / 2 + (at.x / 100) * treeSize
   const leafY = (window.innerHeight - treeSize) / 2 + (at.y / 100) * treeSize
   return {

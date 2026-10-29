@@ -45,7 +45,7 @@ function waitForImage(src: string) {
 /** Unitless zoom so a resting leaf grows to ~FLY_SCREEN of the screen. */
 function calcZoom() {
   const flyPx = FLY_SCREEN * Math.min(window.innerWidth, window.innerHeight)
-  const treePx = Math.min(0.9 * window.innerHeight, 0.94 * window.innerWidth)
+  const treePx = Math.min(0.76 * window.innerHeight, 0.94 * window.innerWidth)
   const restPx = (LEAF_SIZE / 100) * treePx
   return Math.max(1, flyPx / restPx)
 }

@@ -1,0 +1,52 @@
+.tree-banner {
+  position: relative;
+  z-index: 6;
+  /* Keep the PNG aspect ratio so the text overlay matches the oval. */
+  width: min(70vw, 36rem, 52vh);
+  margin: 0.15rem 0 -1.6rem;
+  flex-shrink: 0;
+  pointer-events: none;
+  container-type: inline-size;
+}
+
+.tree-banner__frame {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  user-select: none;
+}
+
+/* Inner opening of the gold frame. */
+.tree-banner__plate {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 36%;
+  bottom: 36%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.tree-banner__title {
+  margin: 0;
+  padding: 0.12em 0.15em;
+  max-width: 100%;
+  color: #d4a017;
+  font-family: 'Cinzel Decorative', Palatino, 'Palatino Linotype', serif;
+  font-size: clamp(1.05rem, 7.8cqi, 2.4rem);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  text-align: center;
+  white-space: nowrap;
+  background: linear-gradient(180deg, #fff8d6 10%, #f0c85a 48%, #b8860b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 1px 0 #6b3e08);
+}
