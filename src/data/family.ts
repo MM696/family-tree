@@ -211,4 +211,6 @@ export const familyNames = [
   'OHWAHWA FAMILY',
   'IDEDEVBO FAMILY',
   'ITA FAMILY',
+  'MAC-HENRY ISEMEDE & FAMILY',
+  'ALIKA EWERE & FAMILY',
 ];
