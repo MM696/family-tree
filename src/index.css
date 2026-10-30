@@ -25,4 +25,10 @@ body,
   /* Fill the screen without cropping (cover zooms/crops a square image). */
   background-size: 100% 100%;
   background-color: #87c4e8;
+  opacity: 0;
+}
+
+.app.is-ready {
+  opacity: 1;
+  transition: opacity 0.7s ease;
 }

@@ -5,6 +5,8 @@ import { useFlyingQueue } from '../hooks/useFlyingQueue'
 import { FlyingLeaf } from './FlyingLeaf'
 import './LeafTree.css'
 
+const FLY_START_DELAY_MS = 800
+
 /** How long one leaf takes to fly out, show its name and fly back. */
 const FLIGHT_MS = 8000
 const GAP_MS = 800
@@ -20,9 +22,10 @@ function calcZoom() {
   return Math.max(1, flyPx / restPx)
 }
 
-export function LeafTree() {
+export function LeafTree({ ready }: { ready: boolean }) {
   const [zoom, setZoom] = useState(8)
-  const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, true)
+  const [canFly, setCanFly] = useState(false)
+  const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, canFly)
   const flyingIndex = [...flying][0]
 
   useEffect(() => {
@@ -31,6 +34,16 @@ export function LeafTree() {
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
   }, [])
+
+  useEffect(() => {
+    if (!ready) {
+      setCanFly(false)
+      return
+    }
+
+    const timer = window.setTimeout(() => setCanFly(true), FLY_START_DELAY_MS)
+    return () => window.clearTimeout(timer)
+  }, [ready])
 
   const style = {
     '--flight': `${FLIGHT_MS}ms`,
