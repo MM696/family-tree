@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import tree from '../assets/tree.png'
 import { leaves } from '../data/leaves'
 import { useFlyingQueue } from '../hooks/useFlyingQueue'
@@ -15,21 +15,26 @@ const STAGGER_MS = FLIGHT_MS + GAP_MS
 const LEAF_SIZE = 9
 const FLY_SCREEN = 0.78
 
-function calcZoom() {
+function calcZoom(treePx: number) {
   const flyPx = FLY_SCREEN * Math.min(window.innerWidth, window.innerHeight)
-  const treePx = Math.min(0.92 * window.innerHeight, 0.88 * window.innerWidth)
   const restPx = (LEAF_SIZE / 100) * treePx
   return Math.max(1, flyPx / restPx)
 }
 
 export function LeafTree({ ready }: { ready: boolean }) {
+  const treeRef = useRef<HTMLDivElement>(null)
   const [zoom, setZoom] = useState(8)
   const [canFly, setCanFly] = useState(false)
   const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, canFly)
   const flyingIndex = [...flying][0]
 
   useEffect(() => {
-    const update = () => setZoom(calcZoom())
+    const update = () => {
+      const treePx =
+        treeRef.current?.getBoundingClientRect().width ??
+        Math.min(window.innerHeight, window.innerWidth)
+      setZoom(calcZoom(treePx))
+    }
     update()
     window.addEventListener('resize', update)
     return () => window.removeEventListener('resize', update)
@@ -53,7 +58,7 @@ export function LeafTree({ ready }: { ready: boolean }) {
   } as CSSProperties
 
   return (
-    <div className="leaf-tree" style={style}>
+    <div className="leaf-tree" ref={treeRef} style={style}>
       <img className="leaf-tree__tree" src={tree} alt="Family tree" draggable={false} />
       {flyingIndex !== undefined && <FlyingLeaf leaf={leaves[flyingIndex]} />}
     </div>

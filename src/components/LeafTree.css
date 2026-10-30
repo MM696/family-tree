@@ -6,6 +6,12 @@
   height: var(--tree-size);
 }
 
+@media (max-aspect-ratio: 3/4) {
+  .leaf-tree {
+    --tree-size: min(82svh, 96vw);
+  }
+}
+
 .leaf-tree__tree {
   display: block;
   width: 100%;

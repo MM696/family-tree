@@ -13,6 +13,7 @@ body,
 }
 
 .app {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -31,4 +32,12 @@ body,
 .app.is-ready {
   opacity: 1;
   transition: opacity 0.7s ease;
+}
+
+/* Tall screens: sit the tree on the meadow instead of floating in the sky. */
+@media (max-aspect-ratio: 3/4) {
+  .app {
+    justify-content: flex-end;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 7svh);
+  }
 }
