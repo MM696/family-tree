@@ -1,5 +1,5 @@
 .leaf-tree {
-  --tree-size: min(76vh, 94vw);
+  --tree-size: min(92vh, 88vw);
   --unit: calc(var(--tree-size) / 100);
   position: relative;
   width: var(--tree-size);
@@ -10,16 +10,9 @@
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
   user-select: none;
   pointer-events: none;
-  opacity: 0;
-  transform: scale(0.55);
-  transform-origin: 50% 85%;
-}
-
-.leaf-tree.is-intro .leaf-tree__tree,
-.leaf-tree.is-ready .leaf-tree__tree {
-  animation: tree-pop var(--tree-pop) cubic-bezier(0.22, 1.4, 0.36, 1) both;
 }
 
 .leaf-slot {
@@ -29,31 +22,17 @@
   width: calc(var(--size) * var(--unit));
   margin-left: calc(var(--size) * var(--unit) / -2);
   margin-top: calc(var(--size) * var(--unit) / -2);
+  pointer-events: none;
 }
 
 .leaf {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   overflow: visible;
-  opacity: 0;
-  transform: rotate(var(--rest)) scale(0);
-  /* Same origin for rest, fly-out and fly-back so it returns to its stem. */
   transform-origin: 50% 50%;
 }
 
-.leaf-tree.is-intro .leaf {
-  animation: leaf-grow var(--grow-duration) cubic-bezier(0.22, 1.35, 0.36, 1) var(--grow-delay)
-    both;
-}
-
-.leaf-tree.is-ready .leaf {
-  opacity: 1;
-  transform: rotate(var(--rest)) scale(1);
-}
-
 .leaf-slot.is-flying .leaf {
-  z-index: 10;
-  /* Same origin as rest (the stem) so the leaf returns to its branch. */
   animation: leaf-fly var(--flight) ease-in-out both;
 }
 
@@ -62,18 +41,9 @@
   width: 100%;
   height: auto;
   user-select: none;
-  transform-origin: 22% 92%;
-  filter: drop-shadow(0 calc(0.3 * var(--unit)) calc(0.3 * var(--unit)) rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 0.6vmin 1.2vmin rgba(0, 0, 0, 0.35));
 }
 
-.leaf-tree.is-ready .leaf__img {
-  animation: leaf-sway 2.6s ease-in-out var(--sway-delay) infinite alternate;
-}
-
-/*
- * Name sits in the middle of the leaf blade.
- * Counter-scaled by 1/zoom so the text stays sharp when the leaf grows.
- */
 .leaf__name {
   --name-scale: 1;
   position: absolute;
@@ -97,8 +67,8 @@
   word-break: normal;
   hyphens: none;
   text-shadow:
-    0 0 0.4vmin rgba(15, 40, 8, 1),
-    0 0 1.2vmin rgba(15, 40, 8, 0.95),
+    0 0 0.4vmin rgba(15, 40, 10, 1),
+    0 0 1.2vmin rgba(15, 40, 10, 0.95),
     0 0.4vmin 0.8vmin rgba(0, 0, 0, 0.65);
   transform: translate(-50%, -50%) scale(calc(1 / var(--zoom)));
   transform-origin: center;
@@ -110,49 +80,22 @@
   animation: leaf-name var(--flight) ease-in-out both;
 }
 
-@keyframes tree-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.55);
-  }
-  65% {
-    opacity: 1;
-    transform: scale(1.06);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes leaf-grow {
-  0% {
-    opacity: 0;
-    transform: rotate(var(--rest)) scale(0);
-  }
-  70% {
-    opacity: 1;
-    transform: rotate(var(--rest)) scale(1.18);
-  }
-  100% {
-    opacity: 1;
-    transform: rotate(var(--rest)) scale(1);
-  }
-}
-
 /*
- * One flight (8s total): 0-25 fly out and zoom in (~2s),
- * 25-75 hover large with the name (~4s), 75-100 fly back (~2s).
+ * Appear from the painted leaf, fly to the screen centre, then vanish
+ * back into the same leaf so leaf.png is never left sitting on the tree.
  */
 @keyframes leaf-fly {
   0% {
-    transform: translate(0, 0) scale(1) rotate(var(--rest));
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35) rotate(var(--rest));
   }
   8% {
+    opacity: 1;
     transform: translate(calc(var(--dx) * 0.12), calc(var(--dy) * 0.12 - 12px))
-      scale(1.3) rotate(calc(var(--rest) * 0.5 + var(--spin)));
+      scale(1.1) rotate(calc(var(--rest) * 0.4 + var(--spin)));
   }
   25% {
+    opacity: 1;
     transform: translate(var(--dx), var(--dy)) scale(var(--zoom)) rotate(0deg);
   }
   50% {
@@ -162,64 +105,42 @@
   75% {
     transform: translate(var(--dx), var(--dy)) scale(var(--zoom)) rotate(0deg);
   }
+  92% {
+    opacity: 1;
+  }
   100% {
-    transform: translate(0, 0) scale(1) rotate(var(--rest));
+    opacity: 0;
+    transform: translate(0, 0) scale(0.35) rotate(var(--rest));
   }
 }
 
 @keyframes leaf-name {
   0%,
-  22% {
+  18% {
     opacity: 0;
   }
   28%,
   72% {
     opacity: 1;
   }
-  78%,
+  82%,
   100% {
     opacity: 0;
   }
 }
 
-@keyframes leaf-sway {
-  from {
-    transform: rotate(-6deg);
-  }
-  to {
-    transform: rotate(6deg);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .leaf-tree__tree,
-  .leaf-tree.is-intro .leaf-tree__tree,
-  .leaf-tree.is-ready .leaf-tree__tree {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-
-  .leaf,
-  .leaf-tree.is-intro .leaf,
-  .leaf-tree.is-ready .leaf {
-    opacity: 1;
-    transform: rotate(var(--rest));
-    animation: none;
-  }
-
   .leaf-slot.is-flying .leaf,
-  .leaf-slot.is-flying .leaf__name,
-  .leaf-tree.is-ready .leaf__img {
+  .leaf-slot.is-flying .leaf__name {
     animation: none;
   }
 
-  .leaf__name {
-    top: 48%;
-    left: 52%;
-    max-width: 80%;
-    font-size: calc(0.9 * var(--unit));
-    transform: translate(-50%, -50%);
+  .leaf-slot.is-flying .leaf {
+    opacity: 1;
+    transform: translate(var(--dx), var(--dy)) scale(var(--zoom));
+  }
+
+  .leaf-slot.is-flying .leaf__name {
     opacity: 1;
   }
 }

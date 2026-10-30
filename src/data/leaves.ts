@@ -15,13 +15,13 @@ export type Leaf = {
 }
 
 /** The branches of tree.png, as an ellipse in % of the image size, reaching out to the branch tips. */
-const CANOPY = { x: 50, y: 40, rx: 47, ry: 35 }
+const CANOPY = { x: 50, y: 38, rx: 42, ry: 30 }
 /** Direction the tip of leaf.png points, in degrees (0 = right, -90 = up). */
 const LEAF_TIP_ANGLE = -50
 const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5))
 
 /** The trunk below the branches, kept free of leaves. */
-const isOnTrunk = ({ x, y }: Point) => y > 54 && Math.abs(x - 50) < 9
+const isOnTrunk = ({ x, y }: Point) => y > 68 && Math.abs(x - 50) < 18
 
 /** `count` evenly spread spots over the canopy, using a sunflower spiral. */
 function spiralSpots(count: number): Point[] {

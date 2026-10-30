@@ -1,12 +1,14 @@
 :root {
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   color: #2b2b2b;
-  background: linear-gradient(180deg, #bfe6ff 0%, #e8f7ff 60%, #f3fbe9 100%);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
+html,
+body,
+#root {
+  height: 100%;
   margin: 0;
 }
 
@@ -14,7 +16,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   height: 100svh;
   overflow: hidden;
+  background-image: url('./assets/sunrise_background.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  /* Fill the screen without cropping (cover zooms/crops a square image). */
+  background-size: 100% 100%;
+  background-color: #87c4e8;
 }

@@ -1,11 +1,11 @@
-import { TitleBanner } from './components/TitleBanner'
 import { LeafTree } from './components/LeafTree'
+import { Soundtrack } from './components/Soundtrack'
 
 function App() {
   return (
     <main className="app">
-      <TitleBanner />
       <LeafTree />
+      <Soundtrack />
     </main>
   )
 }

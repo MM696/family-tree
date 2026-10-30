@@ -4,12 +4,8 @@ import type { Leaf } from '../data/leaves'
 
 type Props = {
   leaf: Leaf
-  index: number
-  flying: boolean
-  growDelayMs: number
 }
 
-/** Shrink long names so they stay on the leaf. Words are never split. */
 function nameScale(name: string) {
   const length = name.trim().length
   if (length <= 12) return 1
@@ -19,9 +15,8 @@ function nameScale(name: string) {
   return 0.6
 }
 
-/** How far this leaf must move so its centre sits in the middle of the screen. */
 function deltaToScreenCenter(at: { x: number; y: number }) {
-  const treeSize = Math.min(0.76 * window.innerHeight, 0.94 * window.innerWidth)
+  const treeSize = Math.min(0.92 * window.innerHeight, 0.88 * window.innerWidth)
   const leafX = (window.innerWidth - treeSize) / 2 + (at.x / 100) * treeSize
   const leafY = (window.innerHeight - treeSize) / 2 + (at.y / 100) * treeSize
   return {
@@ -30,7 +25,7 @@ function deltaToScreenCenter(at: { x: number; y: number }) {
   }
 }
 
-export function FlyingLeaf({ leaf, index, flying, growDelayMs }: Props) {
+export function FlyingLeaf({ leaf }: Props) {
   const { dx, dy } = deltaToScreenCenter(leaf.at)
 
   const style = {
@@ -40,13 +35,11 @@ export function FlyingLeaf({ leaf, index, flying, growDelayMs }: Props) {
     '--dy': `${dy}px`,
     '--rest': `${leaf.rest}deg`,
     '--spin': `${leaf.spin}deg`,
-    '--sway-delay': `${index * -0.37}s`,
-    '--grow-delay': `${growDelayMs}ms`,
     '--name-scale': nameScale(leaf.name),
   } as CSSProperties
 
   return (
-    <div className={flying ? 'leaf-slot is-flying' : 'leaf-slot'} style={style}>
+    <div className="leaf-slot is-flying" style={style}>
       <div className="leaf">
         <img className="leaf__img" src={leafImage} alt="" draggable={false} />
         <span className="leaf__name">{leaf.name}</span>

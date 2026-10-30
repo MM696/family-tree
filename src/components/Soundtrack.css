@@ -1,0 +1,27 @@
+.soundtrack {
+  position: fixed;
+  z-index: 20;
+  right: max(12px, 2vmin);
+  bottom: max(12px, 2vmin);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid rgba(255, 236, 180, 0.7);
+  border-radius: 50%;
+  background: rgba(18, 42, 20, 0.55);
+  color: #fff8e8;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.soundtrack:hover,
+.soundtrack:focus-visible {
+  background: rgba(18, 42, 20, 0.78);
+  outline: none;
+}
+
+.soundtrack.is-playing {
+  box-shadow: 0 0 0 3px rgba(255, 220, 120, 0.28);
+}
