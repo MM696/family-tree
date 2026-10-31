@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 
 /**
  * Sends items off in batches, in order.
- * The next batch only launches after the previous one has finished (`flightMs`)
- * plus any extra wait built into `staggerMs`.
+ * Never wraps mid-batch: the last batch of a cycle may be smaller, then the
+ * next cycle starts fresh from the beginning. That way no name shows twice
+ * in the same flight or jumps ahead of a full pass.
  * Starts only when `enabled` becomes true.
  */
 export function useFlyingQueue(
@@ -35,8 +36,13 @@ export function useFlyingQueue(
 
       for (let i = 0; i < size; i++) {
         active.add(next)
-        next = (next + 1) % count
+        next += 1
+        if (next >= count) {
+          next = 0
+          break
+        }
       }
+
       setFlying(new Set(active))
 
       // Keep the flying class on until the CSS 100% keyframe has landed.
