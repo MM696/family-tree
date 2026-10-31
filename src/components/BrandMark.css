@@ -1,0 +1,18 @@
+.brand-mark {
+  position: fixed;
+  z-index: 20;
+  top: max(12px, 1.8vmin);
+  right: max(14px, 2.2vmin);
+  margin: 0;
+  color: #fff8e8;
+  font-family: Syne, 'Segoe UI', sans-serif;
+  font-size: clamp(12px, 2vmin, 20px);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-shadow:
+    0 0 0.6vmin rgba(20, 40, 10, 0.85),
+    0 0.2vmin 0.5vmin rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  user-select: none;
+}

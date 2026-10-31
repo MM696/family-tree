@@ -7,13 +7,16 @@ import './LeafTree.css'
 
 const FLY_START_DELAY_MS = 800
 
-/** How long one leaf takes to fly out, show its name and fly back. */
+/** How long a batch takes to fly out, show names and fly back. */
 const FLIGHT_MS = 8000
 const GAP_MS = 800
 const STAGGER_MS = FLIGHT_MS + GAP_MS
+/** How many leaves fly and display together. */
+const BATCH_SIZE = 5
 
 const LEAF_SIZE = 9
-const FLY_SCREEN = 0.78
+/** Each of the 5 leaves fills this fraction of the smaller screen side. */
+const FLY_SCREEN = 0.44
 
 function calcZoom(treePx: number) {
   const flyPx = FLY_SCREEN * Math.min(window.innerWidth, window.innerHeight)
@@ -23,10 +26,10 @@ function calcZoom(treePx: number) {
 
 export function LeafTree({ ready }: { ready: boolean }) {
   const treeRef = useRef<HTMLDivElement>(null)
-  const [zoom, setZoom] = useState(8)
+  const [zoom, setZoom] = useState(4)
   const [canFly, setCanFly] = useState(false)
-  const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, canFly)
-  const flyingIndex = [...flying][0]
+  const flying = useFlyingQueue(leaves.length, STAGGER_MS, FLIGHT_MS, canFly, BATCH_SIZE)
+  const flyingIndexes = [...flying]
 
   useEffect(() => {
     const update = () => {
@@ -60,7 +63,9 @@ export function LeafTree({ ready }: { ready: boolean }) {
   return (
     <div className="leaf-tree" ref={treeRef} style={style}>
       <img className="leaf-tree__tree" src={tree} alt="Family tree" draggable={false} />
-      {flyingIndex !== undefined && <FlyingLeaf leaf={leaves[flyingIndex]} />}
+      {flyingIndexes.map((index, slot) => (
+        <FlyingLeaf key={`${index}-${slot}`} leaf={leaves[index]} slot={slot} />
+      ))}
     </div>
   )
 }

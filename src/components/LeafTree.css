@@ -58,15 +58,15 @@
   left: 52%;
   box-sizing: border-box;
   width: max-content;
-  max-width: calc(52% * var(--zoom));
+  max-width: calc(58% * var(--zoom) * var(--leaf-scale, 1));
   padding: 0;
   border: none;
   background: none;
   color: #fffef8;
-  font-size: clamp(18px, calc(var(--fly-size) * 0.1 * var(--name-scale)), 52px);
+  font-size: clamp(16px, calc(var(--fly-size) * 0.11 * var(--name-scale)), 42px);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: 0.02em;
+  line-height: 1.12;
+  letter-spacing: 0.015em;
   text-align: center;
   white-space: normal;
   overflow-wrap: normal;
@@ -76,7 +76,8 @@
     0 0 0.4vmin rgba(15, 40, 10, 1),
     0 0 1.2vmin rgba(15, 40, 10, 0.95),
     0 0.4vmin 0.8vmin rgba(0, 0, 0, 0.65);
-  transform: translate(-50%, -50%) scale(calc(1 / var(--zoom)));
+  /* Counter the leaf zoom so text stays sharp; leaf-scale grows the blade, not the type. */
+  transform: translate(-50%, -50%) scale(calc(1 / (var(--zoom) * var(--leaf-scale, 1))));
   transform-origin: center;
   opacity: 0;
   pointer-events: none;
@@ -102,14 +103,16 @@
   }
   25% {
     opacity: 1;
-    transform: translate(var(--dx), var(--dy)) scale(var(--zoom)) rotate(0deg);
+    transform: translate(var(--dx), var(--dy))
+      scale(calc(var(--zoom) * var(--leaf-scale, 1))) rotate(0deg);
   }
   50% {
-    transform: translate(var(--dx), calc(var(--dy) - 8px)) scale(calc(var(--zoom) * 1.05))
-      rotate(0deg);
+    transform: translate(var(--dx), calc(var(--dy) - 8px))
+      scale(calc(var(--zoom) * var(--leaf-scale, 1) * 1.04)) rotate(0deg);
   }
   75% {
-    transform: translate(var(--dx), var(--dy)) scale(var(--zoom)) rotate(0deg);
+    transform: translate(var(--dx), var(--dy))
+      scale(calc(var(--zoom) * var(--leaf-scale, 1))) rotate(0deg);
   }
   92% {
     opacity: 1;
@@ -143,7 +146,8 @@
 
   .leaf-slot.is-flying .leaf {
     opacity: 1;
-    transform: translate(var(--dx), var(--dy)) scale(var(--zoom));
+    transform: translate(var(--dx), var(--dy))
+      scale(calc(var(--zoom) * var(--leaf-scale, 1)));
   }
 
   .leaf-slot.is-flying .leaf__name {

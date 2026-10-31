@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import leaf from './assets/leaf.png'
 import sunrise from './assets/sunrise_background.png'
 import tree from './assets/tree.png'
+import { BrandMark } from './components/BrandMark'
 import { LeafTree } from './components/LeafTree'
 import { Soundtrack } from './components/Soundtrack'
 import { waitForImage } from './waitForImage'
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <main className={ready ? 'app is-ready' : 'app'}>
+      <BrandMark />
       <LeafTree ready={ready} />
       <Soundtrack />
     </main>
